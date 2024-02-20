@@ -5,6 +5,6 @@ rm -rf build/*
 mkdir -p build/
 rsync -a template/ build/
 
-cat "$1" | python3 ./scramble.py
+./scramble.py "$1" --verbose
 weasyprint ./build/quiz.html ./build/quiz.pdf
 weasyprint ./build/answer.html ./build/answer.pdf
