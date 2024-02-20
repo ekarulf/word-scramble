@@ -1,0 +1,76 @@
+@font-face {
+  font-family: Fira Sans;
+  font-weight: 400;
+  src: url(firasans-regular.otf);
+}
+@font-face {
+  font-family: Fira Sans;
+  font-style: italic;
+  font-weight: 400;
+  src: url(firasans-italic.otf);
+}
+@font-face {
+  font-family: Fira Sans;
+  font-weight: 300;
+  src: url(firasans-light.otf);
+}
+@font-face {
+  font-family: Fira Sans;
+  font-style: italic;
+  font-weight: 300;
+  src: url(firasans-lightitalic.otf);
+}
+@font-face {
+  font-family: Fira Sans;
+  font-weight: 700;
+  src: url(firasans-bold.otf);
+}
+@page {
+  size: Letter; /* Change from the default size of A4 */
+  margin: 1cm; /* Set margin on each page */
+}
+html {
+  color: #393939;
+  font-family: Fira Sans;
+  font-size: 24pt;
+  font-weight: 300;
+  line-height: 1.1;
+  hyphens: auto;
+
+}
+html.answers {
+  font-size: 18pt;
+}
+/* Adjust table width and height as needed */
+table {
+  width: 100%;
+}
+
+tr {
+  break-inside: avoid;
+}
+
+/* Style table cells */
+.quiz td {
+  padding: 10px;
+  border: 2px solid #ccc;
+  text-align: center;
+  min-height: 100px;
+  width: 50%;
+}
+
+.answers td {
+/*  width: 16%;*/
+}
+
+.pagebreak { page-break-before: always; } /* page-break-after works, as well */
+
+.answers tr.even {
+  background-color: #e6e6e6;
+}
+.answers tr.even td.end {
+  border-right: 4px solid #1a1a1a;
+}
+.answers tr.odd td.end {
+  border-right: 4px solid #ccc;
+}

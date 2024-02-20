@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang=en class="answers">
+<head>
+  <title>Word Scramble</title>
+  <link href="page.css" rel="stylesheet">
+</head>
+<body>
+  <table>
+    <tbody>
+      {%- for row in results|batch(2) %}
+      <tr class="{{ loop.cycle('odd', 'even') }}">
+        {%- for number,word,scrambled in row %}
+        <td class="number">{{ number }}</td>
+        <td class="scrambled">{{ scrambled }}</td>
+        <td class="word {{ loop.cycle('end', '') }}">{{ word }}</td>
+        {%- endfor %}
+      </tr>
+      {%- endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
