@@ -27,20 +27,31 @@ def is_valid_word(word, scrambled_word, checkDictionary=True):
         return False
 
     # If the word is an English word, scramble again
-    if checkDictionary and DCSCopyTextDefinition(None, scrambled_word, (0, len(scrambled_word))):
+    if checkDictionary and is_dictionary_word(scrambled_word):
         logger.debug(f"Refusing to scramble {word} into {scrambled_word} as it is found in the dictionary")
         return False
 
     return True
 
+def is_dictionary_word(word):
+    if DCSCopyTextDefinition is None:
+        raise RuntimeError("Unable to load OS X Dictionary")
+
+    return DCSCopyTextDefinition(None, word, (0, len(word))) is not None
+
+
 def scramble_word(word):
+    # typo protection: don't try and scramble a word without an answer
+    if not is_dictionary_word(word):
+        raise ValueError(f"{word} is not a valid word to scramble")
+
     rejected = set([word])
     for num in range(100):
         scrambled_letters = random.sample(word, len(word))
         scrambled_word = "".join(scrambled_letters)
         if scrambled_word in rejected:
             continue
-        elif not is_valid_word(word, scrambled_word, checkDictionary=DCSCopyTextDefinition is not None):
+        elif not is_valid_word(word, scrambled_word, checkDictionary=True):
             rejected.add(scrambled_word)
         else:
             break
@@ -72,16 +83,19 @@ def main():
         autoescape=select_autoescape()
     )
 
-    words = [ line.lower().strip() for line in args.wordlist ]
-    results = list()
-    for number, word in enumerate(random.sample(sorted(words), len(words)), start=1):
-        scrambled_word = scramble_word(word)
-        results.append((number, word, scrambled_word))
+    # read & shuffle wordlist passed in as an argument
+    words = [line.lower().strip() for line in args.wordlist]
+    random.shuffle(words)
 
+    # scramble each word in the wordlist
+    results = [(number, word, scramble_word(word)) for number, word in enumerate(words, start=1)]
+
+    # if verbose output requested, print the answer key to the commandline
     if args.verbose:
         for number, word, scrambled_word in results:
             print("\t".join((str(number), word, scrambled_word)))
 
+    # render the quiz and answer templates into the build/ folder
     for template_name in ["quiz.html", "answer.html"]:
         template = env.get_template(template_name)
         with open(os.path.join("build", template_name), "w") as page:
